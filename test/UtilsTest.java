@@ -126,4 +126,44 @@ public class UtilsTest {
         assertEquals(1L, Utils.binomial(2L, 0L));
         assertEquals(6L, Utils.binomial(4L, 2L));
     }
+    
+    @Test
+    public void testGetDivisors() {
+        // 1, 2, 3, 5, 6, 10, 15, 30
+        final List<Long> divisors = Utils.getDivisors(30L);
+        assertTrue(1L == divisors.get(0));
+        assertTrue(2L == divisors.get(1));
+        assertTrue(3L == divisors.get(2));
+        assertTrue(5L == divisors.get(3));
+        assertTrue(6L == divisors.get(4));
+        assertTrue(10L == divisors.get(5));
+        assertTrue(15L == divisors.get(6));
+        assertTrue(30L == divisors.get(7));
+        assertEquals(8, divisors.size());
+    }
+    
+    @Test
+    public void testGetProperDivisors() {
+        final List<Long> divisors = Utils.getProperDivisors(30L);
+        assertTrue(1L == divisors.get(0));
+        assertTrue(2L == divisors.get(1));
+        assertTrue(3L == divisors.get(2));
+        assertTrue(5L == divisors.get(3));
+        assertTrue(6L == divisors.get(4));
+        assertTrue(10L == divisors.get(5));
+        assertTrue(15L == divisors.get(6));
+        assertEquals(7, divisors.size());
+    }
+    
+    @Test
+    public void testPermute() {
+        Integer[] array = new Integer[]{ 2, 1, 0 };
+        
+        assertFalse(Utils.permute(array));
+        
+        assertTrue(array[0] == 2);
+        assertTrue(array[1] == 1);
+        assertTrue(array[2] == 0);
+        
+    }
 }

@@ -177,6 +177,34 @@ public class Utils {
         return product;
     }
     
+    public static List<Long> getDivisors(final long num) {
+        final List<Long> divisors = new ArrayList<>();
+        
+        for (long l = 1L; l <= num; ++l) {
+            if (num % l == 0L) {
+                divisors.add(l);
+            }
+        }
+        
+        return divisors;
+    }
+    
+    public static List<Long> getProperDivisors(final long num) {
+        final List<Long> divisors = getDivisors(num);
+        divisors.remove(divisors.size() - 1);
+        return divisors;
+    }
+    
+    public static BigInteger bigFactorial(final long n) {
+        BigInteger f = BigInteger.ONE;
+        
+        for (long l = 2L; l <= n; ++l) {
+            f = f.multiply(BigInteger.valueOf(l));
+        }
+        
+        return f;
+    }
+    
     public static BigInteger bigBinomial(final long n, final long k) {
         BigInteger result = BigInteger.ONE;
         
@@ -255,5 +283,61 @@ public class Utils {
     
     public static long collatz(final long num) {
         return ((num & 1) == 0) ? num >>> 1 : 3 * num + 1;
+    }
+    
+    public static boolean isAbundantNumber(final long num) {
+        final List<Long> divisors = getProperDivisors(num);
+        long sum = 0L;
+        
+        for (final long divisor : divisors) {
+            sum += divisor;
+        }
+        
+        return sum > num;
+    }
+ 
+    public static <E extends Comparable<E>> boolean permute(final E[] array){
+        int i = array.length - 2;
+        
+        while (i >= 0 && array[i].compareTo(array[i + 1]) > 0) {
+            --i;
+        }
+        
+        if (i == -1) {
+            // The input array contains the last lexicographic permutation;
+            // return false.
+            return false;
+        }
+        
+        final E lowerBound = array[i];
+        int minIndex = i + 1;
+        E min = array[minIndex];
+        
+        for (int j = minIndex + 1; j < array.length; ++j) {
+            if (min.compareTo(array[j]) > 0 && array[j].compareTo(lowerBound) > 0) {
+                min = array[j];
+                minIndex = j;
+            }
+        }
+        
+        E tmp = array[i];
+        array[i] = array[minIndex];
+        array[minIndex] = tmp;
+        
+        for (int l = i + 1, r = array.length - 1; l < r; l++, r--) {
+            tmp = array[l];
+            array[l] = array[r];
+            array[r] = tmp;
+        }
+        
+        return true;
+    }
+    
+    public static void print(final Object[] array) {
+        for (final Object o : array) {
+            System.out.print(o.toString() + " ");
+        }
+        
+        System.out.println();
     }
 }

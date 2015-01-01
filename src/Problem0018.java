@@ -22,9 +22,44 @@ private static final String DATA =
         "63 66 04 68 89 53 67 30 73 16 69 87 40 31 " +
         "04 62 98 27 23 09 70 98 73 93 38 53 60 04 23";
 
+private static final int DEMO_HEIGHT = 4;
+
+private static final String DEMO_DATA =
+        "3 " +
+        "7 4 " +
+        "2 4 6 " +
+        "8 5 9 3";
+
     @Override
     public void solve() {
-        final int[][] triangle = getTriangle();
+        final String[] parsedStrings = DATA.split(" ");
+        final int[][] triangle = getTriangle(parsedStrings, HEIGHT);
+        final int[][] memory = getWorkingMemory(triangle);
+        memory[0][0] = triangle[0][0];
+        
+        for (int row = 1; row < memory.length; ++row) {
+            for (int col = 0; col < memory[row].length; ++col) {
+                
+                int leftParent = col - 1;
+                int rightParent = col;
+                
+                if (leftParent < 0) {
+                    leftParent = 0;
+                }
+                
+                if (rightParent >= memory[row - 1].length) {
+                    rightParent = memory[row - 1].length - 1;
+                }
+                
+                if (memory[row][col] < memory[row - 1][leftParent] + triangle[row][col]) {
+                    memory[row][col] = memory[row - 1][leftParent] + triangle[row][col];
+                }
+                
+                if (memory[row][col] < memory[row - 1][rightParent] + triangle[row][col]) {
+                    memory[row][col] = memory[row - 1][rightParent] + triangle[row][col];
+                }
+            }
+        }
         
         for (final int[] row : triangle) {
             for (final int element : row) {
@@ -33,10 +68,31 @@ private static final String DATA =
             
             System.out.println();
         }
+        
+        System.out.println();
+        
+        for (final int[] row : memory) {
+            for (final int element : row) {
+                System.out.print(element + " ");
+            }
+            
+            System.out.println();
+        }
+        
+        System.out.println();
+        
+        int largest = Integer.MIN_VALUE;
+        
+        for (final int i : memory[memory.length - 1]) {
+            if (largest < i) {
+                largest = i;
+            }
+        }
+        
+        System.out.println(largest);
     }
     
-    private int[][] getTriangle() {
-        final String[] numberStrings = DATA.split(" ");
+    private int[][] getTriangle(final String[] numberStrings, final int height) {
         final int[] numbers = new int[numberStrings.length];
         
         for (int i = 0; i < numberStrings.length; ++i) {
@@ -47,9 +103,9 @@ private static final String DATA =
             }
         }
         
-        final int[][] intTriangle = new int[HEIGHT][];
+        final int[][] intTriangle = new int[height][];
         
-        for (int i = 0; i < HEIGHT; ++i) {
+        for (int i = 0; i < height; ++i) {
             intTriangle[i] = new int[i + 1];
         }
         
@@ -63,5 +119,15 @@ private static final String DATA =
         }
         
         return intTriangle;
+    }
+    
+    private int[][] getWorkingMemory(final int[][] triangle) {
+        final int[][] memory = new int[triangle.length][];
+        
+        for (int i = 0; i < triangle.length; ++i) {
+            memory[i] = new int[triangle[i].length];
+        }
+        
+        return memory;
     }
 }
