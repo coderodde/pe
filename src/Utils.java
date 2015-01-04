@@ -1,9 +1,11 @@
 import java.math.BigInteger;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 public class Utils {
 
@@ -91,6 +93,28 @@ public class Utils {
         return true;
     }
 
+    public static long previousPrime(long fromPrime) {
+        if (fromPrime <= 2L) {
+            return Long.MIN_VALUE;
+        }
+        
+        if (fromPrime == 3L) {
+            return 2L;
+        }
+        
+        if ((fromPrime & 1) == 0) {
+            // Is even.
+            fromPrime--;
+        } else {
+            fromPrime -= 2;
+        }
+        
+        while (!isPrime(fromPrime)) {
+            fromPrime -= 2;
+        }
+        
+        return fromPrime;
+    }
 
     /**
      * Returns the next prime assuming that <code>fromPrime</code> is a prime
@@ -332,6 +356,43 @@ public class Utils {
         
         return true;
     }
+ 
+    public static <E extends Comparable<E>> boolean permuteBack(final E[] array){
+        int i = array.length - 2;
+        
+        while (i >= 0 && array[i].compareTo(array[i + 1]) < 0) {
+            --i;
+        }
+        
+        if (i == -1) {
+            // The input array contains the last lexicographic permutation;
+            // return false.
+            return false;
+        }
+        
+        final E upperBound = array[i];
+        int maxIndex = i + 1;
+        E max = array[maxIndex];
+        
+        for (int j = maxIndex + 1; j < array.length; ++j) {
+            if (max.compareTo(array[j]) < 0 && array[j].compareTo(upperBound) < 0) {
+                max = array[j];
+                maxIndex = j;
+            }
+        }
+        
+        E tmp = array[i];
+        array[i] = array[maxIndex];
+        array[maxIndex] = tmp;
+        
+        for (int l = i + 1, r = array.length - 1; l < r; l++, r--) {
+            tmp = array[l];
+            array[l] = array[r];
+            array[r] = tmp;
+        }
+        
+        return true;
+    }
     
     public static void print(final Object[] array) {
         for (final Object o : array) {
@@ -339,5 +400,142 @@ public class Utils {
         }
         
         System.out.println();
+    }
+    
+    public static final <E> boolean 
+        listsHaveSameContent(final List<E> list1, 
+                             final List<E> list2) {
+        if (list1.size() != list2.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < list1.size(); ++i) {
+            if (!list1.get(i).equals(list2.get(i))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+        
+    public static int[] toDigit(final long num) {
+        final char[] chars = Long.toString(num).toCharArray();
+        final int[] result = new int[chars.length];
+        
+        for (int i = 0; i < chars.length; ++i) {
+            result[i] = chars[i] - '0';
+        }
+        
+        return result;
+    }
+    
+    public static int[] getAllRotations(final int num) {
+        final char[] chars = Integer.toString(num).toCharArray();
+        final int[] ret = new int[chars.length];
+        
+        final Queue<Character> queue = new ArrayDeque<>();
+        
+        for (final char c : chars) {
+            queue.add(c);
+        }
+        
+        final StringBuilder sb = new StringBuilder(chars.length);
+        
+        for (int i = 0; i < chars.length; ++i) {
+            // Clear the string builder.
+            sb.delete(0, sb.length());
+            
+            for (final Character c : queue) {
+                sb.append(c);
+            }
+            
+            try {
+                ret[i] = Integer.parseInt(sb.toString());
+            } catch (final NumberFormatException nfe) {
+                
+            }
+            
+            queue.add(queue.remove());
+        }
+        
+        return ret;
+    }
+    
+    public static <E> boolean isPalindromicArray(final char[] array) {
+        for (int l = 0, r = array.length - 1; l < r; ++l, --r) {
+            if (array[l] != array[r]) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    public static boolean isPandigital(final long num) {
+        final char[] chars = Long.toString(num).toCharArray();
+        
+        if (chars.length > 9) {
+            return false;
+        }
+        
+        boolean[] map = new boolean[10];
+        int n = 0;
+        
+        for (final char c : chars) {
+            if (!map[c - '0']) {
+                map[c - '0'] = true;
+                ++n;
+            }
+        }
+        
+        for (int i = 1; i <= n; ++i) {
+            if (!map[i]) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    public static long buildLongFromDigits(final Integer[] array) {
+        long l = 0L;
+        reverse(array);
+        for (int i = 0, m = 1; i < array.length; ++i, m *= 10) {
+            l += array[i] * m;
+        }
+        reverse(array);
+        return l;
+    }
+    
+    public static <E> void reverse(final E[] array) {
+        for (int l = 0, r = array.length - 1; l < r; l++, r--) {
+            final E tmp = array[l];
+            array[l] = array[r];
+            array[r] = tmp;
+        }
+    }
+    
+    public static int getWordCode(final String word) {
+        int sum = 0;
+        
+        for (final char c : word.toUpperCase().toCharArray()) {
+            sum += c - 'A' + 1;
+        }
+        
+        return sum;
+    }
+    
+    public static boolean isTriangleNumber(int num) {
+        num *= 2;
+        
+        for (int n = 0; ; ++n) {
+            final int current = n * (n + 1);
+            
+            if (current > num) {
+                return false;
+            } else if (current == num) {
+                return true;
+            }
+        }
     }
 }

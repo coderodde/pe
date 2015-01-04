@@ -45,6 +45,24 @@ public class UtilsTest {
     }
     
     @Test
+    public void testPreviousPrime() {
+        for (long l = -10L; l <= 2L; ++l) {
+            assertEquals(Long.MIN_VALUE, Utils.previousPrime(l));
+        }
+        
+        assertEquals(2L, Utils.previousPrime(3L));
+        assertEquals(3L, Utils.previousPrime(4L));
+        assertEquals(3L, Utils.previousPrime(5L));
+        assertEquals(5L, Utils.previousPrime(6L));
+        assertEquals(5L, Utils.previousPrime(7L));
+        assertEquals(7L, Utils.previousPrime(8L));
+        assertEquals(7L, Utils.previousPrime(9L));
+        assertEquals(7L, Utils.previousPrime(10L));
+        assertEquals(7L, Utils.previousPrime(11L));
+        assertEquals(11L, Utils.previousPrime(12L));
+    }
+    
+    @Test
     public void testFactorize() {
         final long num = 3780L;
         final List<Long> factors = Utils.factorize(num);
@@ -165,5 +183,59 @@ public class UtilsTest {
         assertTrue(array[1] == 1);
         assertTrue(array[2] == 0);
         
+        array = new Integer[]{ 0, 2, 3, 1 };
+        
+        assertTrue(Utils.permute(array));
+        
+        assertTrue(array[0] == 0);
+        assertTrue(array[1] == 3);
+        assertTrue(array[2] == 1);
+        assertTrue(array[3] == 2);
+    }
+    
+    @Test
+    public void testPermuteBack() {
+        Integer[] array = new Integer[]{ 0, 1, 2 };
+        
+        assertFalse(Utils.permuteBack(array));
+        
+        assertTrue(array[0] == 0);
+        assertTrue(array[1] == 1);
+        assertTrue(array[2] == 2);
+        
+        array = new Integer[]{ 1, 3, 2, 0 };
+        
+        assertTrue(Utils.permuteBack(array));
+        
+        assertTrue(array[0] == 1);
+        assertTrue(array[1] == 3);
+        assertTrue(array[2] == 0);
+        assertTrue(array[3] == 2);
+        
+        array = new Integer[]{ 9, 1, 2, 3, 4, 5, 6, 7, 8 };
+        
+        Utils.permuteBack(array);
+        
+        assertTrue(array[0] == 8);
+        assertTrue(array[1] == 9);
+        assertTrue(array[2] == 7);
+        assertTrue(array[3] == 6);
+        assertTrue(array[4] == 5);
+        assertTrue(array[5] == 4);
+        assertTrue(array[6] == 3);
+        assertTrue(array[7] == 2);
+        assertTrue(array[8] == 1);
+    }
+    
+    @Test
+    public void testPandigital() {
+        assertTrue(Utils.isPandigital(15423L));
+        assertTrue(Utils.isPandigital(1L));
+        assertTrue(Utils.isPandigital(12L));
+        assertTrue(Utils.isPandigital(21L));
+        assertTrue(Utils.isPandigital(312L));
+        assertTrue(Utils.isPandigital(321654987L));
+        assertFalse(Utils.isPandigital(3214562789L));
+        assertFalse(Utils.isPandigital(134L));
     }
 }
